@@ -1,6 +1,5 @@
 package com.firstclub.subscription_manager.controller;
 
-import com.firstclub.subscription_manager.entity.MembershipPlan;
 import com.firstclub.subscription_manager.entity.UserSubscription;
 import com.firstclub.subscription_manager.service.SubscriptionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

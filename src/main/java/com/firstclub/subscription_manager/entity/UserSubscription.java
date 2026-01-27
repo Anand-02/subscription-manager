@@ -1,10 +1,12 @@
 package com.firstclub.subscription_manager.entity;
 
 import com.firstclub.subscription_manager.enums.SubscriptionStatus;
+import com.firstclub.subscription_manager.exception.ActiveSubscriptionNotFoundException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -49,30 +51,34 @@ public class UserSubscription {
     }
 
     public Boolean isExpired() {
-        return status != SubscriptionStatus.CANCELLED &&
-                LocalDateTime.now().isAfter(endTime);
-    }
-
-    public SubscriptionStatus getSubscriptionStatus() {
-        if (status == SubscriptionStatus.CANCELLED)
-            return SubscriptionStatus.CANCELLED;
-        if (isExpired())
-            return SubscriptionStatus.EXPIRED;
-        return SubscriptionStatus.ACTIVE;
+        if (endTime.isBefore(LocalDateTime.now())) {
+            status = SubscriptionStatus.EXPIRED;
+            return true;
+        }
+        return false;
     }
 
     public void markCancelled() {
-        if(status != SubscriptionStatus.ACTIVE) {
-            throw new IllegalStateException("Only active subscriptions can be cancelled");
+        if(isExpired()) {
+            throw new ActiveSubscriptionNotFoundException("Only active subscriptions can be cancelled");
         }
         this.status = SubscriptionStatus.CANCELLED;
         this.endTime = LocalDateTime.now();
     }
 
     public void markExpired() {
-        if(status != SubscriptionStatus.ACTIVE) {
-            throw new IllegalStateException("");
+        if(isExpired()) {
+            throw new ActiveSubscriptionNotFoundException("Not active subscription found");
         }
         this.status = SubscriptionStatus.EXPIRED;
+    }
+
+    public void upgradePlan(Long newPlanId, Duration newDuration) {
+        if(isExpired()){
+            throw new ActiveSubscriptionNotFoundException("No active subscription found");
+        }
+        this.planId = newPlanId;
+        this.startTime = LocalDateTime.now();
+        this.endTime = LocalDateTime.now().plus(newDuration);
     }
 }

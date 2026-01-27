@@ -5,7 +5,7 @@ import com.firstclub.subscription_manager.entity.UserSubscription;
 
 public interface SubscriptionService {
     UserSubscription createSubscription(Long userId, Long planId);
-    void cancelSubscription(Long userId, Long planId);
+    UserSubscription cancelSubscription(Long userId);
     UserSubscription upgradePlan(Long userId, Long planId);
-    MembershipPlan getPlanByUserId(Long userId);
+    UserSubscription getActivePlanForUser(Long userId);
 }

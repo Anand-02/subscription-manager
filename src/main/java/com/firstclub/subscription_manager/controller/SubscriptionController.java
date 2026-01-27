@@ -2,32 +2,33 @@ package com.firstclub.subscription_manager.controller;
 
 import com.firstclub.subscription_manager.entity.MembershipPlan;
 import com.firstclub.subscription_manager.entity.UserSubscription;
-import com.firstclub.subscription_manager.service.SubscriptionService;
+import com.firstclub.subscription_manager.service.SubscriptionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/subscription")
+@RestController
+@RequestMapping("/subscription")
 public class SubscriptionController {
 
     @Autowired
-    private SubscriptionService subscriptionService;
+    private SubscriptionServiceImpl subscriptionService;
 
     @PostMapping("/user/{userId}/plan/{planId}")
     public ResponseEntity<UserSubscription> subscribe(@PathVariable Long userId, @PathVariable Long planId){
         return new ResponseEntity<>(subscriptionService.createSubscription(userId, planId), HttpStatus.CREATED);
     }
 
-    @PutMapping("/cancel/{userId}/plan/{planId}")
-    public ResponseEntity<HttpStatus> cancelSubscription(@PathVariable Long userId, @PathVariable Long planId){
-        subscriptionService.cancelSubscription(userId, planId);
+    @PutMapping("/cancel/{userId}")
+    public ResponseEntity<HttpStatus> cancelSubscription(@PathVariable Long userId){
+        subscriptionService.cancelSubscription(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<MembershipPlan> getUserSubscription(@PathVariable Long userId){
-        return new ResponseEntity<>(subscriptionService.getPlanByUserId(userId), HttpStatus.OK);
+    public ResponseEntity<UserSubscription> getUserSubscription(@PathVariable Long userId){
+        return new ResponseEntity<>(subscriptionService.getActivePlanForUser(userId), HttpStatus.OK);
     }
 
     @PutMapping("/update/{userId}/plan/{planId}")

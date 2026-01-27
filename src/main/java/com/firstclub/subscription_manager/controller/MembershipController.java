@@ -2,6 +2,7 @@ package com.firstclub.subscription_manager.controller;
 
 import com.firstclub.subscription_manager.entity.MembershipPlan;
 import com.firstclub.subscription_manager.service.MembershipService;
+import com.firstclub.subscription_manager.service.MembershipServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/membership")
+@RestController
+@RequestMapping("/membership")
 public class MembershipController {
 
     @Autowired
-    private MembershipService membershipService;
+    private MembershipServiceImpl membershipService;
 
     @GetMapping("/plans/all")
     public ResponseEntity<List<MembershipPlan>> getAllPlans(){

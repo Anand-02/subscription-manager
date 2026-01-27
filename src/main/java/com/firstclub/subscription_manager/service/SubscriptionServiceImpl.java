@@ -18,12 +18,12 @@ public class SubscriptionServiceImpl implements  SubscriptionService {
     private MembershipRepository membershipRepository;
 
     @Override
-    public void createSubscription(Long userId, Long planId) {
+    public UserSubscription createSubscription(Long userId, Long planId) {
         MembershipPlan membershipPlan = membershipRepository.findById(planId).get();
         Duration duration = membershipPlan.getDuration();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endTime = now.plus(duration);
-        subscriptionRepository.save(new UserSubscription(
+        return subscriptionRepository.save(new UserSubscription(
                 userId,
                 planId,
                 now,
@@ -39,8 +39,8 @@ public class SubscriptionServiceImpl implements  SubscriptionService {
     }
 
     @Override
-    public void upgradePlan(Long userId, Long planId) {
-
+    public UserSubscription upgradePlan(Long userId, Long planId) {
+        return null;
     }
 
     @Override

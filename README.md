@@ -1,4 +1,4 @@
-# Backend Assignment – <Project Name>
+# Subscription And Tier Management Service
 
 This project is a backend service built using Spring Boot that exposes REST APIs to manage subscription and tier management.  
 It follows a layered architecture and demonstrates clean separation of concerns.
